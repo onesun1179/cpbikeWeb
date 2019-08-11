@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<!--
+	나와 자전거 by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+
+<head>
+	<script type="text/javascript">
+		function doDisplay(id) {
+			if (id.style.display == 'none') {
+				id.style.display = 'block';
+			} else {
+				id.style.display = 'none';
+			}
+		}
+	</script>
+	<title>나와자전거 Application Web</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<link rel="stylesheet" href="assets/css/main.css" />
+</head>
+
+<body class="is-preload">
+
+	<!-- Header -->
+	<div id="header">
+
+		<div class="top">
+
+			<!-- Logo -->
+			<div id="logo">
+				<span class="image avatar48"><img src="images/avatar.jpg" alt="" /></span>
+				<h1 id="title"> 팀 이름 </h1>
+				<p>Hyperspace Engineer</p>
+			</div>
+
+			<!-- Nav -->
+			<nav id="nav">
+				<ul>
+					<li><a href="#top" id="top-link"><span class="icon solid fa-home">Intro</span></a></li>
+					<li><a href="#about" id="portfolio-link"><span class="icon solid fa-biking">Application Introduce</span></a></li>
+					<li><a href="#portfolio" id="about-link"><span class="icon solid fa-route">Coruse</span></a></li>
+					<li><a href="#contact" id="contact-link"><span class="icon solid fa-shopping-basket">Bicycle Mart</span></a></li>
+				</ul>
+			</nav>
+
+		</div>
+
+		<div class="bottom">
+
+			<!-- Social Icons -->
+			<ul class="icons">
+				<li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
+				<li><a href="#" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>
+				<li><a href="#" class="icon brands fa-github"><span class="label">Github</span></a></li>
+				<li><a href="#" class="icon brands fa-dribbble"><span class="label">Dribbble</span></a></li>
+				<li><a href="#" class="icon solid fa-envelope"><span class="label">Email</span></a></li>
+			</ul>
+
+		</div>
+
+	</div>
+
+	<!-- Main -->
+	<div id="main">
+
+		<!-- Intro -->
+		<section id="top" class="one dark cover">
+			<div class="container">
+
+				<header>
+
+					<h2 class="alt" align="center"><strong>나와 자전거</strong><br /></h2>
+
+				</header>
+
+				<!--<footer align="center">
+								<a href="#about" class="button scrolly">소개</a>
+							</footer>-->
+
+			</div>
+		</section>
+
+
+		<!-- About Me -->
+		<section id="about" class="three">
+			<div class="container">
+
+				<header>
+					<h2>Application Introduce</h2>
+					<p>나와 자전거 앱은<p>
+				</header>
+				<div align="center">
+
+					<video src="video/media.io_createcourse.mp4" id="createcourse1" autoplay poster="images/posterimage.jpg" controls muted width="50%">
+					</video>
+					<pre id="cursor" onclick="doDisplay(createcourse1)">코스생성</pre>
+					<hr>
+					<video src="video/media.io_courseriding1.mp4" id="courseriding1" poster="images/posterimage.jpg" controls muted width="50%" style="display:none">
+					</video>
+					<pre id="cursor" onclick="doDisplay(courseriding1)">코스주행1</pre>
+					<hr>
+
+					<video src="video/media.io_courseriding2.mp4" id="courseriding2" poster="images/posterimage.jpg" controls muted width="50%" style="display:none">
+					</video>
+					<pre id="cursor" onclick="doDisplay(courseriding2)">코스주행2</pre>
+					<hr>
+
+					<video src="video/media.io_courseriding3.mp4" id="courseriding3" poster="images/posterimage.jpg" controls muted width="50%" style="display:none">
+					</video>
+					<pre id="cursor" onclick="doDisplay(courseriding3)">코스주행3</pre>
+					<hr>
+
+					<br>
+
+
+				</div>
+<p align="float">라즈베리파이를 이용하여 정확한 자전거<br>속도측정을 할 수 있고 사용자들의 기록들과 <br>현재 주행 상태을 비교할 수 있는 어플리케이션 입니다.</p>
+		</section>
+		<!-- About Me -->
+		<?php
+					$DB['HOST'] = 'localhost';
+					$DB['id'] = 'cpbike';
+					$DB['pw'] = '1q2w3e4r';
+					$DB['db'] = 'cpbike';
+					$mysqli = new mysqli($DB['HOST'],$DB['id'],$DB['pw'],$DB['db']);
+
+					// 테이블의 모든 정보를 읽어온다.
+
+					$query1 = 'select * from ranking where distance>0;';
+
+					$result1 = $mysqli->query($query1);
+					$total_record1 = $result1->num_rows;
+					$result_array1 = array();
+
+					for ( $i = 0; $i < $total_record1; $i++ ) {
+
+					$result1->data_seek($i);
+					$row1 = $result1->fetch_array();
+
+
+					$row_array1 = array(
+						"courseNum" => $row1['courseNum'],
+						"ID" => $row1['ID'],
+						"speed" => $row1['speed'],
+						"distance" => $row1['distance'],
+						"time" => $row1['time']
+						);
+					array_push($result_array1,$row_array1);
+					}
+
+
+					$arr1 = array(
+					"results" => $result_array1
+					);
+
+
+
+					$array_total = array();
+					$array_num = array();
+					for($tag=0; $tag<count($arr1["results"]); $tag++) {
+
+					$query = "SELECT * FROM course".$arr1["results"][$tag]["courseNum"];
+					$result = $mysqli->query($query);
+					$total_record = $result->num_rows;
+					$result_array = array();
+					array_push($array_num, $arr1["results"][$tag]["courseNum"]);
+					#print_r(count($arr["results"]));
+					for ( $i = 0; $i < $total_record; $i++ ) {
+						// 한행씩 읽기 위해 offset을 준다.
+						$result->data_seek($i);
+
+						// 결과값을 배열로 바꾼다.
+						$row = $result->fetch_array();
+						// 결과값들을 JSON형식으로 넣기 위해 연관배열로 넣는다.
+
+						$row_array = array(
+							"x" => $row['x'],
+							"y" => $row['y']
+							);
+						// 한 행을 results에 넣을 배열의 끝에 추가한다.
+						array_push($result_array,$row_array);
+					}
+
+					$arr = array(
+						"results" => $result_array,
+						);
+
+					array_push($array_total, $arr);
+					}
+					#print_r($array_total[0]["results"][0]);
+					#print_r('<br>');
+					#print_r($array_num);
+					#	$json_array1 = json_encode($array);
+
+					#print_r(json_encode($array_total));
+					?>
+		<section id="portfolio" class="three">
+			<div id="container">
+
+				<div id="map" style="width:100%;height:400px;float:left;"></div>
+				<div id="context" style="width:100%; height:200px; float:left; " </div> <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=1f26c2bcd114be6eaec787016f4fc3fc&libraries=services">
+					</script>
+
+					<script>
+						var count = <?php echo json_encode($array_num) ?>;
+						var array_total = <?php echo json_encode($array_total) ?>;
+						var record_arr = <?php echo json_encode($arr1) ?>;
+						console.log(record_arr["results"][0]["courseNum"]);
+						console.log(count);
+						var coords = new Array();
+						//
+
+						var mapContainer = document.getElementById('map'), // 지도를 표시할 div
+							mapOption = {
+								center: new kakao.maps.LatLng(37, 128), // 지도의 중심좌표
+								level: 13, // 지도의 확대 레벨
+								mapTypeId: kakao.maps.MapTypeId.ROADMAP // 지도종류
+							};
+						// 지도를 생성한다
+						var map = new kakao.maps.Map(mapContainer, mapOption);
+
+						var MARKER_WIDTH = 33, // 기본, 클릭 마커의 너비
+							MARKER_HEIGHT = 36, // 기본, 클릭 마커의 높이
+							OFFSET_X = 12, // 기본, 클릭 마커의 기준 X좌표
+							OFFSET_Y = MARKER_HEIGHT, // 기본, 클릭 마커의 기준 Y좌표
+							OVER_MARKER_WIDTH = 40, // 오버 마커의 너비
+							OVER_MARKER_HEIGHT = 42, // 오버 마커의 높이
+							OVER_OFFSET_X = 13, // 오버 마커의 기준 X좌표
+							OVER_OFFSET_Y = OVER_MARKER_HEIGHT, // 오버 마커의 기준 Y좌표
+							SPRITE_MARKER_URL = 'http://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markers_sprites2.png', // 스프라이트 마커 이미지 URL
+							SPRITE_WIDTH = 126, // 스프라이트 이미지 너비
+							SPRITE_HEIGHT = 146, // 스프라이트 이미지 높이
+							SPRITE_GAP = 10; // 스프라이트 이미지에서 마커간 간격
+
+						var markerSize = new kakao.maps.Size(MARKER_WIDTH, MARKER_HEIGHT), // 기본, 클릭 마커의 크기
+							markerOffset = new kakao.maps.Point(OFFSET_X, OFFSET_Y), // 기본, 클릭 마커의 기준좌표
+							overMarkerSize = new kakao.maps.Size(OVER_MARKER_WIDTH, OVER_MARKER_HEIGHT), // 오버 마커의 크기
+							overMarkerOffset = new kakao.maps.Point(OVER_OFFSET_X, OVER_OFFSET_Y), // 오버 마커의 기준 좌표
+							spriteImageSize = new kakao.maps.Size(SPRITE_WIDTH, SPRITE_HEIGHT); // 스프라이트 이미지의 크기
+						var positions = new Array();
+						var polyArr = new Array();
+						var selectedMarker = null;
+						var polyline = null;
+						for (var i = 0; i < count.length; i++) {
+
+							positions.push(new kakao.maps.LatLng(array_total[i]["results"][0]["x"], array_total[i]["results"][0]["y"]));
+							polyArr[i] = new Array();
+							for (var j = 0; j < array_total[i]["results"].length; j++) {
+								polyArr[i].push(new kakao.maps.LatLng(array_total[i]["results"][j]["x"], array_total[i]["results"][j]["y"]));
+							}
+						}
+
+
+						// 지도 위에 마커를 표시합니다
+						for (var i = 0, len = positions.length; i < len; i++) {
+							var gapX = (MARKER_WIDTH + SPRITE_GAP), // 스프라이트 이미지에서 마커로 사용할 이미지 X좌표 간격 값
+								originY = (MARKER_HEIGHT + SPRITE_GAP) * i, // 스프라이트 이미지에서 기본, 클릭 마커로 사용할 Y좌표 값
+								overOriginY = (OVER_MARKER_HEIGHT + SPRITE_GAP) * i, // 스프라이트 이미지에서 오버 마커로 사용할 Y좌표 값
+								normalOrigin = new kakao.maps.Point(0, originY), // 스프라이트 이미지에서 기본 마커로 사용할 영역의 좌상단 좌표
+								clickOrigin = new kakao.maps.Point(gapX, originY), // 스프라이트 이미지에서 마우스오버 마커로 사용할 영역의 좌상단 좌표
+								overOrigin = new kakao.maps.Point(gapX * 2, overOriginY); // 스프라이트 이미지에서 클릭 마커로 사용할 영역의 좌상단 좌표
+
+							// 마커를 생성하고 지도위에 표시합니다
+							addMarker(i, positions[i], normalOrigin, overOrigin, clickOrigin, polyArr);
+
+						}
+
+						function showRecord() {
+
+						}
+
+						function deleteRecord() {
+
+						}
+						// 마커를 생성하고 지도 위에 표시하고, 마커에 mouseover, mouseout, click 이벤트를 등록하는 함수입니다
+						function addMarker(num, position, normalOrigin, overOrigin, clickOrigin, poly) {
+
+							// 기본 마커이미지, 오버 마커이미지, 클릭 마커이미지를 생성합니다
+							var normalImage = createMarkerImage(markerSize, markerOffset, normalOrigin),
+								overImage = createMarkerImage(overMarkerSize, overMarkerOffset, overOrigin),
+								clickImage = createMarkerImage(markerSize, markerOffset, clickOrigin);
+
+							// 마커를 생성하고 이미지는 기본 마커 이미지를 사용합니다
+							var marker = new kakao.maps.Marker({
+								map: map,
+								title: String(num) + "&&" + String(count[num]),
+								position: position,
+								image: normalImage
+							});
+
+
+
+
+							// 마커 객체에 마커아이디와 마커의 기본 이미지를 추가합니다
+							marker.normalImage = normalImage;
+
+							// 마커에 mouseover 이벤트를 등록합니다
+							kakao.maps.event.addListener(marker, 'mouseover', function() {
+
+								// 클릭된 마커가 없고, mouseover된 마커가 클릭된 마커가 아니면
+								// 마커의 이미지를 오버 이미지로 변경합니다
+								if (!selectedMarker || selectedMarker !== marker) {
+									marker.setImage(overImage);
+								}
+							});
+
+							// 마커에 mouseout 이벤트를 등록합니다
+							kakao.maps.event.addListener(marker, 'mouseout', function() {
+
+								// 클릭된 마커가 없고, mouseout된 마커가 클릭된 마커가 아니면
+								// 마커의 이미지를 기본 이미지로 변경합니다
+								if (!selectedMarker || selectedMarker !== marker) {
+									marker.setImage(normalImage);
+								}
+							});
+
+							// 마커에 click 이벤트를 등록합니다
+							kakao.maps.event.addListener(marker, 'click', function() {
+
+								// 클릭된 마커가 없고, click 마커가 클릭된 마커가 아니면
+								// 마커의 이미지를 클릭 이미지로 변경합니다
+								if (!selectedMarker || selectedMarker !== marker) {
+
+									// 클릭된 마커 객체가 null이 아니면
+									// 클릭된 마커의 이미지를 기본 이미지로 변경하고
+									!!selectedMarker && selectedMarker.setImage(selectedMarker.normalImage);
+									if (polyline !== null) {
+										polyline.setMap(null);
+									}
+									var strArr = marker.getTitle().split("&&");
+									polyline = new kakao.maps.Polyline({
+										path: poly[parseInt(strArr[0])], // 선을 구성하는 좌표배열 입니다
+										strokeWeight: 3, // 선의 두께 입니다
+										strokeColor: 'red', // 선의 색깔입니다
+										strokeOpacity: 0.7, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
+										strokeStyle: 'solid' // 선의 스타일입니다
+									});
+									polyline.setMap(marker.getMap());
+
+								for(var j=0; j<count.length; j++) {
+									if(count[strArr[0]] == record_arr["results"][j]["courseNum"]) {
+										document.getElementById('context').innerHTML = "<table><tr><th>코스 번호</th><th>회원 ID</th><th>속도(km/h)</th><th>거리(m)</th><th>시간</th></tr>" +
+										"<tr>" +
+											"<td>" + record_arr["results"][j]["courseNum"] + "</td>" +
+											"<td>" + record_arr["results"][j]["ID"] + "</td>" +
+											"<td>" + record_arr["results"][j]["speed"] + "</td>" +
+											"<td>" + record_arr["results"][j]["distance"] + "</td>" +
+											"<td>" + record_arr["results"][j]["time"] + "</td>" +
+											"</tr>";
+									}
+
+								}
+								document.getElementById('context').innerHTML += "</table>";
+
+									// 현재 클릭된 마커의 이미지는 클릭 이미지로 변경합니다
+									marker.setImage(clickImage);
+									console.log(count[strArr[0]]);
+								}
+
+								// 클릭된 마커를 현재 클릭된 마커 객체로 설정합니다
+								selectedMarker = marker;
+							});
+						}
+
+						// MakrerImage 객체를 생성하여 반환하는 함수입니다
+						function createMarkerImage(markerSize, offset, spriteOrigin) {
+							var markerImage = new kakao.maps.MarkerImage(
+								SPRITE_MARKER_URL, // 스프라이트 마커 이미지 URL
+								markerSize, // 마커의 크기
+								{
+									offset: offset, // 마커 이미지에서의 기준 좌표
+									spriteOrigin: spriteOrigin, // 스트라이프 이미지 중 사용할 영역의 좌상단 좌표
+									spriteSize: spriteImageSize // 스프라이트 이미지의 크기
+								}
+							);
+
+							return markerImage;
+						}
+						// document.write(array_total[1]["results"][1]["x"]);
+					</script>
+					<style>
+						div#ContextList>[id*='context'] {
+							border-style: solid;
+							border-color: black;
+							text-align: left;
+
+							cursor: pointer;
+						}
+					</style>
+		</section>
+		<!-- Portfolio -->
+		<!--	<section id="portfolio" class="two">
+							<div class="container">
+
+								<header>
+									<h2>Course</h2>
+								</header>
+
+
+
+								<div class="row">
+									<div class="col-4 col-12-mobile">
+
+										<article class="item">
+											<a href="#" class="image fit"><img src="images/pic02.jpg" alt="" /></a>
+											<header>
+												<h3>Ipsum Feugiat</h3>
+											</header>
+										</article>
+										<article class="item">
+											<a href="#" class="image fit"><img src="images/pic03.jpg" alt="" /></a>
+											<header>
+												<h3>Rhoncus Semper</h3>
+											</header>
+										</article>
+									</div>
+									<div class="col-4 col-12-mobile">
+										<article class="item">
+											<a href="#" class="image fit"><img src="images/pic04.jpg" alt="" /></a>
+											<header>
+												<h3>Magna Nullam</h3>
+											</header>
+										</article>
+										<article class="item">
+											<a href="#" class="image fit"><img src="images/pic05.jpg" alt="" /></a>
+											<header>
+												<h3>Natoque Vitae</h3>
+											</header>
+										</article>
+									</div>
+									<div class="col-4 col-12-mobile">
+										<article class="item">
+											<a href="#" class="image fit"><img src="images/pic06.jpg" alt="" /></a>
+											<header>
+												<h3>Dolor Penatibus</h3>
+											</header>
+										</article>
+										<article class="item">
+											<a href="#" class="image fit"><img src="images/pic07.jpg" alt="" /></a>
+											<header>
+												<h3>Orci Convallis</h3>
+											</header>
+										</article>
+									</div>
+								</div>
+
+							</div>
+						</section> -->
+
+		<!-- Contact -->
+		<section id="contact" class="four">
+			<div class="container">
+
+				<header>
+					<h2>Bicycle Mart</h2>
+				</header>
+				<dl class="martName">
+					<dt><a href="http://www.bikeselling.co.kr/">바이크셀링</a></dt>
+					<dd>- 자전거 종합 쇼핑몰로 종류,브랜드별로 구분하여 편하게 쇼핑할 수 있다.</dd>
+					<dt><a href="http://veloshop.co.kr/">벨로샵</a> </dt>
+					<dd>- 픽시,하이브리드,로드 자전거 전문샵으로 다양한 자전거를 만날 수 있다.</dd>
+					<dt> <a href="https://www.gorgotago.com/">고르고타고</a> </dt>
+					<dd>- 유명 자전거 쇼핑몰중 하나로써 많은 혜택과 편의기능을 제공하고 있다.</dd>
+				</dl>
+				<p></p>
+
+
+
+			</div>
+		</section>
+
+	</div>
+
+	<!-- Footer -->
+	<div id="footer">
+
+		<!-- Copyright -->
+		<ul class="copyright">
+			<li>&copy; Untitled. All rights reserved.</li>
+			<li>Design: <a class="bottomdotted" href="http://html5up.net">HTML5 UP</a></li>
+		</ul>
+
+	</div>
+
+	<!-- Scripts -->
+	<script src="assets/js/jquery.min.js"></script>
+	<script src="assets/js/jquery.scrolly.min.js"></script>
+	<script src="assets/js/jquery.scrollex.min.js"></script>
+	<script src="assets/js/browser.min.js"></script>
+	<script src="assets/js/breakpoints.min.js"></script>
+	<script src="assets/js/util.js"></script>
+	<script src="assets/js/main.js"></script>
+
+
+</body>
+
+</html>
